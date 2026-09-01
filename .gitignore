@@ -1,0 +1,16 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# сгенерированные артефакты (легко пересоздать через main.py)
+features.csv
+manifest.json
+experiment_results.csv
+confusion_matrix.png
+experiment_results.png
+plots/
+
+# датасет НЕ заливаем — слишком большой
+pract/
