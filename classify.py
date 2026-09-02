@@ -19,22 +19,25 @@ class SceneAnalyzer:
     def classify_frame(self, features):
         b, s, lv, ed, dr = features
 
-        if b < self.thresholds["night_brightness"] or b > 55:
+        if b < 70:
             return "NIGHT"
 
-        if (b >= self.thresholds["fog_brightness_min"]
-                and s <= self.thresholds["fog_std_max"]
-                and lv <= self.thresholds["fog_laplac_max"]):
+        # FOG: очень низкий laplac + низкий edge
+        if (lv <= 800
+                and ed <= 0.15):
             return "FOG"
 
         sb_lo, sb_hi = self.thresholds["smoke_brightness_range"]
-        if (sb_lo <= b <= sb_hi
-                and s <= self.thresholds["smoke_std_max"]
-                and lv <= self.thresholds["smoke_laplac_max"]):
+        # SMOKE: средне-высокий laplac
+        if (60 <= b <= 150
+                and 20 <= s <= 90
+                and 500 <= lv <= 6000
+                and 0.05 <= ed <= 0.35):
             return "SMOKE"
 
-        if (ed >= self.thresholds["rain_edge_density_min"]
-                and dr >= self.thresholds["rain_diagonal_ratio_min"]):
+        # RAIN: высокий edge + низкий diag
+        if (ed >= 0.13
+                and dr <= 0.80):
             return "RAIN"
 
         return "OFF"
